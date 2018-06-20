@@ -60,14 +60,14 @@ func diffTimeInterval(start: Date, end: Date) -> TimeInterval {
 
 // Run
 
-func run(args: [String], clock: Clock, emitter: Emitter, fileSystem: FileSystem) {
+func run(args: [String], clock: Clock, emit: (String) -> (), fileSystem: FileSystem) {
     let start = clock.now()
     let target = fileSystem.readFile(fileName: CommandLine.arguments[1])
     let target2 = String(target.dropLast()) // Drops trailing newline
-    emitter.emit("Hello, " + target2 + "!")
+    emit("Hello, " + target2 + "!")
     let end = clock.now()
     let duration = diffTimeInterval(start: start, end: end)
-    emitter.emit(String(duration * 1000) + "ms")
+    emit(String(duration * 1000) + "ms")
 }
 
 // Main
@@ -77,7 +77,8 @@ func main() {
     let console = ConsoleImpl()
     let emitter = EmitterImpl(console: console)
     let fileSystem = FileSystemImpl()
-    run(args: CommandLine.arguments, clock: clock, emitter: emitter, fileSystem: fileSystem)
+    let emit = { (_ msg: String) -> () in emitter.emit(msg) }
+    run(args: CommandLine.arguments, clock: clock, emit: emit, fileSystem: fileSystem)
 }
 
 main()
