@@ -77,7 +77,7 @@ func main() {
     let console = ConsoleImpl()
     let emitter = EmitterImpl(console: console)
     let fileSystem = FileSystemImpl()
-    let emit = { (_ msg: String) -> () in emitter.emit(msg) }
+    let emit = emitter.emit(_:)
     run(args: CommandLine.arguments, clock: clock, emit: emit, fileSystem: fileSystem)
 }
 
